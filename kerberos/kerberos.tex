@@ -1,0 +1,69 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{cleveref}
+\usepackage{rotating}
+\usepackage{pdflscape}
+\usepackage{xspace}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{soul}
+\usepackage{ragged2e}
+\usepackage[shortlabels]{enumitem}
+\usepackage{multirow}
+\usepackage{fancyvrb}
+\usepackage[dvipsnames]{xcolor}
+\crefname{section}{sezione}{sezioni}
+\renewcommand{\underline}{\ul}
+\newcolumntype{x}[1]{>{\RaggedLeft\hspace{0pt}}p{#1}}
+\newcolumntype{y}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+\newcolumntype{z}[1]{>{\Centering\hspace{0pt}}p{#1}}
+\newtheorem{theorem}{Teorema}
+\newcommand{\bitem}[1]{\item\textbf{#1:}\xspace}
+\newcommand{\er}[2]{\text{E}(\uppercase{#1,#2})}
+\newcommand{\dr}[2]{\text{D}(\uppercase{#1,#2})}
+\newcommand{\p}[2]{\text{\uppercase{#1}}_\textit{\uppercase{#2}}}
+\newcommand{\pu}[1]{\p{PU}{#1}}
+\newcommand{\pr}[1]{\p{PR}{#1}}
+\newcommand{\ks}{\p{K}{S}}
+\newcommand{\ki}[1]{{\p{K}{#1}}}
+\newcommand{\ts}[1]{\textit{TS}_{#1}}
+\newcommand{\lft}[1]{\textit{Lifetime}_{\uc{#1}}}
+\newcommand{\auth}[1]{\textit{Authenticator}_{\uc{#1}}}
+\newcommand{\tk}[1]{\textit{Ticket}_{\uc{#1}}}
+\newcommand{\uc}[1]{\text{\uppercase{#1}}}
+\newcommand{\ei}[2]{\textit{E}_{\ki{#1}}(#2)}
+\newcommand{\n}[1]{\p{N}{#1}}
+\newcommand{\id}[1]{\p{ID}{#1}}
+\newcommand{\crt}[1]{\ll#1\gg}
+\newcommand{\conc}{\,||\,}
+\newcommand{\hs}[1]{\text{H}(#1)}
+\newtheorem{definition}{Definizione}
+\newtheorem{assumption}{Assunzione di sicurezza}
+\title{Lecture Kerberos}
+\author{Riccardo Torre}
+\begin{document}
+	\maketitle
+	\paragraph{Cos'è}Servizio di autenticazione che fornisce un server di autenticazione centralizzato la cui funzione è di autenticare gli utenti ai server e i server agli utenti. Anche i server sono autenticati tra di loro.
+	
+	\paragraph{Nota}Kerberos fa uso solo ed \ul{esclusivamente di crittografia simmetrica!!!}
+	
+	\paragraph{Requisiti Kerberos}Sicuro, trasparente, scalabile, affidabile.
+	\paragraph{Attori}
+	\begin{enumerate}
+		\bitem{AS = authentication server} conosce gli hash delle password di tutti gli utenti e li memorizza in un database centralizzato e crea ogni volta una chiave simmetrica con il client sfruttando l'hash della password come seme da passare a funzioni pseudo random; condivide un'unica chiave con tutti i server;
+		\bitem{TGS = ticket garanting server};
+	\end{enumerate}
+	\paragraph{Ticket}
+	\begin{itemize}
+		\item Ticket per entrare nel gioco che hanno una validità $Time_1$ ore $\to$ crittografia più forte;
+		\item Ticket per utilizzare un servizio che hanno una validità $Time_2$ minuti $\to$ crittografia leggera;
+	\end{itemize}
+	$$Time_1>Time_2$$
+	Man mano si usano ticket che durano sempre di meno.
+	\paragraph{Authenticator}Chi sta operando e chi si dichiara sono la stessa persona.
+\end{document}
