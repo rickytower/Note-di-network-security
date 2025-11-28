@@ -24,24 +24,26 @@
 \newcolumntype{z}[1]{>{\Centering\hspace{0pt}}p{#1}}
 \newtheorem{theorem}{Teorema}
 \newcommand{\bitem}[1]{\item\textbf{#1:}\xspace}
-\newcommand{\er}[2]{\text{E}(\uppercase{#1,#2})}
+\newcommand{\er}[2]{\text{E}({#1,[#2]})}
 \newcommand{\dr}[2]{\text{D}(\uppercase{#1,#2})}
-\newcommand{\p}[2]{\text{\uppercase{#1}}_\textit{\uppercase{#2}}}
+\newcommand{\p}[2]{\text{\uppercase{#1}}_\textit{{#2}}}
 \newcommand{\pu}[1]{\p{PU}{#1}}
 \newcommand{\pr}[1]{\p{PR}{#1}}
-\newcommand{\ks}{\p{K}{S}}
+\newcommand{\ks}{\p{K}{s}}
 \newcommand{\ki}[1]{{\p{K}{#1}}}
 \newcommand{\ts}[1]{\textit{TS}_{#1}}
-\newcommand{\lft}[1]{\textit{Lifetime}_{\uc{#1}}}
-\newcommand{\auth}[1]{\textit{Authenticator}_{\uc{#1}}}
-\newcommand{\tk}[1]{\textit{Ticket}_{\uc{#1}}}
+\newcommand{\lft}[1]{\textit{Lifetime}_{{#1}}}
+\newcommand{\auth}[1]{\textit{Authenticator}_{{#1}}}
+\newcommand{\tk}[1]{\textit{Ticket}_{{#1}}}
 \newcommand{\uc}[1]{\text{\uppercase{#1}}}
 \newcommand{\ei}[2]{\textit{E}_{\ki{#1}}(#2)}
 \newcommand{\n}[1]{\p{N}{#1}}
 \newcommand{\id}[1]{\p{ID}{#1}}
 \newcommand{\crt}[1]{\ll#1\gg}
-\newcommand{\conc}{\,||\,}
+\newcommand{\conc}{\parallel}
+\newcommand{\tab}{\colon\quad}
 \newcommand{\hs}[1]{\text{H}(#1)}
+\newcommand{\ad}[1]{\p{AD}{#1}}
 \newtheorem{definition}{Definizione}
 \newtheorem{assumption}{Assunzione di sicurezza}
 \title{Lecture Kerberos}
@@ -50,13 +52,14 @@
 	\maketitle
 	\paragraph{Cos'è}Servizio di autenticazione che fornisce un server di autenticazione centralizzato la cui funzione è di autenticare gli utenti ai server e i server agli utenti. Anche i server sono autenticati tra di loro.
 	
-	\paragraph{Nota}Kerberos fa uso solo ed \ul{esclusivamente di crittografia simmetrica!!!}
+	\paragraph{Nota}Kerberos fa uso solo ed \ul{esclusivamente di crittografia simmetrica!!! (DES a 56 bit)}
 	
 	\paragraph{Requisiti Kerberos}Sicuro, trasparente, scalabile, affidabile.
 	\paragraph{Attori}
 	\begin{enumerate}
-		\bitem{AS = authentication server} conosce gli hash delle password di tutti gli utenti e li memorizza in un database centralizzato e crea ogni volta una chiave simmetrica con il client sfruttando l'hash della password come seme da passare a funzioni pseudo random; condivide un'unica chiave con tutti i server;
-		\bitem{TGS = ticket garanting server};
+		\bitem{AS = Authentication Server} conosce gli hash delle password di tutti gli utenti e li memorizza in un database centralizzato e crea ogni volta una chiave simmetrica con il client sfruttando l'hash della password come seme da passare a funzioni pseudo random; condivide un'unica chiave con tutti i server;
+		\bitem{TGS = Ticket Granting Server}; emette i ticket agli utenti autenticati dall'AS necessari per ottenere un particolare servizio. Il ticket ha una durata (\textit{Lifetime}) ben precisa e può essere riutilizzato. Condivide le chiavi con tutte le risorse (gli application server).
+		\bitem{Application server}forniscono un determinato servizio.
 	\end{enumerate}
 	\paragraph{Ticket}
 	\begin{itemize}
@@ -64,6 +67,49 @@
 		\item Ticket per utilizzare un servizio che hanno una validità $Time_2$ minuti $\to$ crittografia leggera;
 	\end{itemize}
 	$$Time_1>Time_2$$
+	e 
+	$$\lft{1}>\lft{2}$$
+	ovvero la durata del ticket per entrare nel gioco è maggiore di quella del ticket per utilizzare un servizio.
 	Man mano si usano ticket che durano sempre di meno.
-	\paragraph{Authenticator}Chi sta operando e chi si dichiara sono la stessa persona.
+	\paragraph{Authenticator}Serve per verificare che chi sta operando e chi si dichiara sono la stessa persona. Può essere usato una sola volta.
+	\paragraph{Legenda}
+	\begin{itemize}
+		\bitem{C} Client
+		\bitem{AS} Authentication Server
+		\bitem{TGS}Ticket Granting Server
+		\bitem{V}server di un particolare servizio (ad esempio, il server di stampa).
+	\end{itemize}
+	\paragraph{Note sui messaggi}I messaggi sono 6 in totale. Di seguito vengono riportati alcune note relative ai messaggi (1 a 6)
+	\begin{enumerate}[(1)]
+		\item C fa autenticazione con il server AS; non trasmette la password perché non deve viaggiare in chiaro (per prevenire da un attacco man-in-the-middle); deve esserci un meccanismo per aggiornare la password
+		\item AS restituisce un Ticket; la chiave di sessione non viene trasmessa ma generata da C e da AS utilizzando una funzione basata su DES a cui viene passato H(password)\footnote{hash della password.} come seme.
+		\item il ticket è firmato da AS; TGS riceve il ticket, verifica se C ha i permessi per usufruire del servizio fornito da V.
+	\end{enumerate}
+	\paragraph{Il protocollo}
+	\begin{enumerate}[(1)]
+		\item $\uc{c}\to\uc{as}\tab \id{c}\conc\id{tgs}\conc \ts{1}$
+		\item $\uc{as}\to\uc{c}\tab
+		 \er{\ki{c}}{\ki{c,tgs}\conc\id{tgs}\conc\ts{2}\conc\lft{2}\conc\tk{tgs}}$  $$\tk{tgs}=\er{\ki{tgs}}{\ki{c,tgs}\conc\id{c}\conc\ad{c}\conc\id{tgs}\conc\ts{2}\conc\lft{2}}$$
+		 \item $\uc{c}\to\uc{tgs}\tab \id{v}\conc\tk{tgs}\conc\auth{c}$
+		 \item $\uc{tgs}\to\uc{c}\tab \er{\ki{c,tgs}}{\ki{c,v}\conc\id{v}\conc\ts{4}\conc\tk{v}}$
+		 \begin{gather*}
+		 	\tk{tgs}=\er{\ki{tgs}}{\ki{c,tgs}\conc\id{c}\conc\ad{c}\conc\id{tgs}\conc\ts{2}\conc\lft{2}}\\
+		 	\tk{v}=\er{\ki{v}}{\ki{c,v}\conc\id{c}\conc\ad{c}\conc\id{v}\conc\ts{4}\conc\lft{4}}\\
+		 	\auth{c}=\er{\ki{c,tgs}}{\id{c}\conc\ad{c}\conc\ts{3}}
+		 \end{gather*}
+		 \item $\uc{c}\to\uc{v}\tab \tk{v}\conc\auth{c}$
+		 \item $\uc{v}\to\uc{c}\tab \er{\ki{c,v}}{\ts{5}+1}$ (per fare la mutua autenticazione)
+		 \begin{gather*}
+		 	\tk{v}=\er{\ki{v}}{\ki{c,v}\conc\id{c}\conc \ad{c}\conc \id{v}\conc\ts{4}\conc\lft{4}}\\
+		 	\auth{c}=\er{\ki{c,v}}{\id{c}\conc\ad{c}\conc \ts{5}}
+		 \end{gather*}
+	\end{enumerate}
+	\paragraph{Note sul protocollo}Nel messaggio (2) la chiave $\ki{c}$ viene generata usando gli hash della password locali come seme da passare una funzione pseudorandom separatamente sia da $\ki{c}$ che da AS.  La chiave $\ki{c}$ viene cambiata ogni volta che si ripete il protocollo da capo. Le identità vengono legate crittograficamente alle chiavi per evitare \textbf{binding attacks}. Il ticket è qualcosa di codificato con la chiave condivisa fra AS e TGS. In Kerberos v4 la crittografia è annidata. La versione di Needham-Schroeder simmetrica è molto simile. Nel ticket viene inserito anche l'indirizzo di rete per identificare il client nella rete. Nel messaggio (3) viene presentato il ticket assieme ad $\id{v}$ perché non viene specificato all'interno della codifica di $\tk{v}$ (dunque serve ad identificare il server che offre il servizio di cui C vuole usufruire). L'$\auth{c}$ serve al TGS per verificare che di $\tk{tgs}$:\begin{itemize}
+		\item $\ts{2}<\ts{3}$;
+		\item $\ts{3}<\lft{2}$; 
+	\end{itemize} dunque è necessario per garantire la sicurezza del protocollo che i clock siano sincronizzati.
+	In generale deve valere che $\ts{i}<\ts{i+1}$ e $\ts{i+1}<\lft{i}$.
+	\paragraph{Realms}Kerberos è \textbf{scalabile}, è possibile mettere insieme dei realm, sistemi kerberizzati (AS,TGS e i vari servizi). Si fa uno sharing del database centralizzato di tutte le risorse disponibili localizzato sul Kerberos master computer system. C'è una confederazione di realms. I vari realm hanno una copia del database centralizzato. C nel realm A si autentica con l'AS e ottiene un ticket per presentarlo al TGS di A specificando di voler utilizzare il servizio S del realm B. Dunque il TGS crea un apposito ticket e lo restituisce a C. Questo ticket viene presentato al TGS di B perché è lui che amministra e gestisce i servizi nel realm B (e non il TGS nel realm A). C'è una relazione di fiducia tra i due TGS (TGS realm A con TGS realm B). Quindi il TGS di B restituisce il ticket da presentare al server che offre il servizio S.
+	\paragraph{Numero di chiavi nell'autenticazione cross-realms}Supponendo che ci siano $n$ realm, il realm A per poter parlare con gli altri $n-1$ realm ha bisogno di $\frac{n(n-1)}{2}$ chiavi. Questa formula è derivata dal calcolo degli archi di un grafo completo. Se si modellano i realms come i nodi di un grafo completo, e gli archi che collegano i TGS dei vari realms, per ciascun nodo si contano il numero di archi uscenti e i nodi sono $n$. Dato che ogni arco verrà contato due volte (si pensi al caso di un grafo completo composto da due nodi $A\to B$ e $B\to A$) è necessario effettuare la divisione per 2.
+	\paragraph{v4 vs v5} AES al posto di DES, ticket lifetime con tuning al posto di ticket da 24 h, qualsiasi net address e non solo IP address, ordinamento dei byte dei messaggi, authentication forwarding che permette di evitare di chiedere un ticket per risorse correlate (ad esempio chiedere il ticket per la stampante e chiedere il ticket per il file da stampare diventa chiedere il ticket per stampare il file), autenticazione interrrealm meno chiavi (meno di $O(n^2)$), non c'è più un encoding annidato del ticket, cioè il ticket è stato separato dal messaggio che lo conteneva.
 \end{document}
