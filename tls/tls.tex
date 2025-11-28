@@ -1,0 +1,63 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{cleveref}
+\usepackage{rotating}
+\usepackage{pdflscape}
+\usepackage{xspace}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{soul}
+\usepackage{ragged2e}
+\usepackage[shortlabels]{enumitem}
+\usepackage{multirow}
+\usepackage{fancyvrb}
+\usepackage[dvipsnames]{xcolor}
+\crefname{section}{sezione}{sezioni}
+\renewcommand{\underline}{\ul}
+\newcolumntype{x}[1]{>{\RaggedLeft\hspace{0pt}}p{#1}}
+\newcolumntype{y}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+\newcolumntype{z}[1]{>{\Centering\hspace{0pt}}p{#1}}
+\newtheorem{theorem}{Teorema}
+\newcommand{\bitem}[1]{\item\textbf{#1:}\xspace}
+\newcommand{\er}[2]{\text{E}({#1,[#2]})}
+\newcommand{\dr}[2]{\text{D}(\uppercase{#1,#2})}
+\newcommand{\p}[2]{\text{\uppercase{#1}}_\textit{{#2}}}
+\newcommand{\pu}[1]{\p{PU}{#1}}
+\newcommand{\pr}[1]{\p{PR}{#1}}
+\newcommand{\ks}{\p{K}{s}}
+\newcommand{\ki}[1]{{\p{K}{#1}}}
+\newcommand{\ts}[1]{\textit{TS}_{#1}}
+\newcommand{\lft}[1]{\textit{Lifetime}_{{#1}}}
+\newcommand{\auth}[1]{\textit{Authenticator}_{{#1}}}
+\newcommand{\tk}[1]{\textit{Ticket}_{{#1}}}
+\newcommand{\uc}[1]{\text{\uppercase{#1}}}
+\newcommand{\ei}[2]{\textit{E}_{\ki{#1}}(#2)}
+\newcommand{\n}[1]{\p{N}{#1}}
+\newcommand{\id}[1]{\p{ID}{#1}}
+\newcommand{\crt}[1]{\ll#1\gg}
+\newcommand{\conc}{\parallel}
+\newcommand{\tab}{\colon\quad}
+\newcommand{\hs}[1]{\text{H}(#1)}
+\newcommand{\ad}[1]{\p{AD}{#1}}
+\newtheorem{definition}{Definizione}
+\newtheorem{assumption}{Assunzione di sicurezza}
+\title{Lecture TLS}
+\author{Riccardo Torre}
+\begin{document}
+	\maketitle
+	\paragraph{TLS}È un protocollo di sicurezza con l'obbiettivo di rendere una connessione TCP sicura, autentica. Kerberos lavora al livello applicativo, mentre TLS al livello di trasporto dello stack TCP/IP. Gli attacchi interessano i Web server. Se viene fornito come parte di TCP, tutti i servizi che lavorano con TCP ne fanno uso, o fornito come una dipendenza delle applicazioni. È il discendente di SSL.
+	\paragraph{Architettura dello stack protocollare}Record protocol stabilisce come i pacchetti devono essere spediti criptati e autenticati. L'handshake protocol permette di comunicare i parametri di crittografia per creare la connessione sicura, l'alert protocol chiude una connessione quando avviene qualcosa di anomalo (MAC scorretto, certificato non supportato, fallimento dell'handshake), Change cipher protocol per cambiare la suite crittografica.
+	\paragraph{Record protocol}Il dato viene tagliato in frammenti, che vengono compressi, a cui vengono aggiunti un MAC , criptati e a cui si aggiunge un TLS record header. 
+	\paragraph{Sessione TLS}Associazione di criteri su come client e server devono comunicare. Viene creata con l'handshake protocol. Definisce un insieme di parametri crittografici di sicurezza che possono essere condivise tra connessioni multiple. Le sessioni TLS vengono create per evitare la negoziazione dei parametri di sicurezza per ogni connessione perché è dispendioso.
+	\paragraph{Connssione TLS}Sfruttando le informazioni crittografiche scambiate durante l'handshake. Le connessioni sono transienti; ciascuna connessione è associata ad un'unica sessione.
+	\paragraph{Stato di una sessione}È caratterizzata da un identificatore di sessione, certificati x509.v3, metodi di compressione, specifiche degli algoritmi crittografici, un \textbf{master secret}\footnote{chiamato così perché da esso vengono derivati diversi secret. È lungo 48 byte.}, is resumable è un flag per riattivare una connessione se viene interrotta.
+	\paragraph{Stato di una connessione}È caratterizzata dalle chiavi per calcolare i MAC del server e del client, e le relative chiavi per fare l'encryption, gli initialization vectors  (stabiliti nell'handshake) che vengono utilizzati nel CBC (cipher block chain), e i sequence numbers per non perdere traccia della sequenza della comunicazione.
+	\paragraph{Servizi del Record Protocol}Confidenzialità (AES e chiave segreta handhake protocol) e  integrità (stabilendo durante l'hanshake protocol una chiave condivisa per formare i MAC).
+	\subsection*{L'handshake protocol}
+	
+\end{document}
