@@ -1,9 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2025.11.21)  29 NOV 2025 12:35
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2025.11.21)  30 NOV 2025 13:06
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
-**concetti-base.tex
-(./concetti-base.tex
+**crittografia.tex
+(./crittografia.tex
 LaTeX2e <2022-11-01> patch level 1
 L3 programming layer <2023-02-22>
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
@@ -22,7 +22,7 @@ File: size10.clo 2022/07/02 v1.4n Standard LaTeX file (size option)
 \abovecaptionskip=\skip48
 \belowcaptionskip=\skip49
 \bibindent=\dimen140
-)
+) (../preambolo.tex
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
 Package: babel 2023/02/13 3.86 The Babel package
 \babel@savecnt=\count189
@@ -503,6 +503,7 @@ File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
 ))
 \c@theorem=\count308
 \c@definition=\count309
+)
 \c@assumption=\count310
 
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
@@ -513,34 +514,34 @@ File: l3backend-xetex.def 2023-01-16 L3 backend support: XeTeX
 \g__pdf_backend_annotation_int=\count313
 \g__pdf_backend_link_int=\count314
 )
-(./concetti-base.aux)
-\openout1 = `concetti-base.aux'.
+(./crittografia.aux)
+\openout1 = `crittografia.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 52.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 5.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 5
-2.
+.
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 52.
-LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -576,27 +577,33 @@ LaTeX Font Info:    ... okay on input line 52.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 52.
-(./concetti-base.out) (./concetti-base.out)
+Package hyperref Info: Link coloring OFF on input line 5.
+(./crittografia.out) (./crittografia.out)
 \@outlinefile=\write4
-\openout4 = `concetti-base.out'.
+\openout4 = `crittografia.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
- (./13-03-25.tex) [1
+ [1
 
 ] [2]
-(./concetti-base.aux)
-Package rerunfilecheck Info: File `concetti-base.out' has not changed.
+File: sha.png Graphic file (type bmp)
+<sha.png>
+ [3]
+File: DiffieHellman.png Graphic file (type bmp)
+<DiffieHellman.png>
+ [4] [5]
+(./crittografia.aux)
+Package rerunfilecheck Info: File `crittografia.out' has not changed.
 (rerunfilecheck)             Checksum: CA2AB832C6AF111B23B9E4ADFBB82E6B;136.
  ) 
 Here is how much of TeX's memory you used:
- 16210 strings out of 477887
- 277791 string characters out of 5827407
- 1863018 words of memory out of 6000000
- 36197 multiletter control sequences out of 15000+600000
- 516912 words of font info for 59 fonts, out of 8000000 for 9000
+ 16273 strings out of 477887
+ 278874 string characters out of 5827407
+ 1868018 words of memory out of 6000000
+ 36246 multiletter control sequences out of 15000+600000
+ 516944 words of font info for 63 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 72i,11n,77p,973b,337s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 77i,18n,80p,954b,486s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on concetti-base.pdf (2 pages).
+Output written on crittografia.pdf (5 pages).

@@ -1,0 +1,104 @@
+\documentclass[10pt,a4paper]{article}
+\input{../preambolo.tex}
+\title{Lecture: concetti base di crittografia}
+\author{Riccardo Torre}
+\begin{document}
+	\maketitle
+\section{Lecture 13/05/2025}
+\paragraph{Le reti di sostituzione-permutazione di Calude Shannon}Nel 1949 Claude Shannon introdusse l'idea di reti di permutazione-sostituzione (S-P)  che sono basate su due operazioni crittografiche primitive ossia le sostituzioni con le S-box che sostituiscono i simboli di input confondendo il contenuto del messaggio e le permutazioni con el P-box che permettono di diffondere i bit tra le S-box dissipando la struttura statistica del contenuto del messaggio. I cifrari che hanno questa struttura si dicono \textbf{cifrari a prodotto}.
+\paragraph{Feistel}Nel 1973 Feistel crea il cifrario omonimo che si basa sull'idea di rete S-P proposta da Shannon. Ad ogni \textbf{round }si prende un blocco, lo si divide a metà. La parte di destra viene passata ad una funzione di round (funzione di Feistel) che prende in input oltre alla parte destra una chiave . La parte di sinistra viene messa in XOR con il risultato della funzione di Feistel. Successivamente la parte sinistra e destra vengono scambiate. Vengono fatti 16 round. Dopo il 16 esimo round (17°esimo passaggio) vengono scambiate le due metà. Se nell'operazione di cifratura vengono usate le chiavi nell'ordine $\ki{1},\dots,\ki{16}$, e al 17°esimo passaggio viene fatto lo scambio delle due metà del blocco, nella decifratura i passaggi devono essere svolti nell'ordine inverso, ovvero, si scambiano le due metà, si applicano i round usando le chiavi nell'ordine $\ki{16},\dots,\ki{1}$.
+
+\paragraph{DES}È l'implementazione del cifrario di Feistel, Data Encryption Standard. È stato attaccato per il rapido avanzamento tecnologico, non perché non fosse sicuro. Si decise di utilizzare una chiave da 56 bit perché la computazione con chiavi più lunghe per la tecnologia dell'epoca era abbastanza onerosa. Nel 1999 DES è stato attaccato con un brute force attack. Ci sono dei sospetti che il NSA avesse modificato le S-box introducendo una backdoor. 
+\paragraph{DDES}È suscettibile ad attacco Meet-In-the-Middle. È un attacco \textbf{chosen plaintext}:
+$$X = \ei{i}{P}\xlongrightarrow{\quad M\quad}\ei{j}{M}=C=\ei{j}{\ei{i}{P}}\qquad i,j\in\left[0;2^{56}-1\right]$$
+\begin{enumerate}
+	\item Scegli un plaintext $P$, e applica l'algoritmo DDES per ottenere il relativo ciphertext $C$. Crea una tabella ordinata per $X$.
+	\item Decifra $C$ con tutte le $2^{56}$ possibili chiavi $k_j$ e verifica se $X=\ei{i}{P} = \di{j}{C}$ (condizione Meet in the Middle).
+	\item Ciascuna corrispondenza della suddetta condizione è una soluzione candidata. Usare la stessa coppia di chiavi $\left (\ki{i},\ki{j}\right )$ con altre coppie $\left (P,C\right )$.
+\end{enumerate}
+L'attacco ha una complessità spaziale e temporale di $O(2^{56})$. Quindi la chiave non ha una dimensione doppia di 112 bit.
+\paragraph{Triple DES}DES viene applicato in catena con tre chiavi diverse
+\begin{align*}
+	&\textbf{Encryption}\qquad& P\to\boxed{\ei{1}{P}}\sa{A}\boxed{\di{2}{A}}\sa{B}\boxed{\ei{3}{B}}\to C\\
+	&\textbf{Decryption}\qquad&C\to\boxed{\di{3}{C}}\sa{B}\boxed{\ei{2}{B}}\sa{A}\boxed{\di{1}{A}}\to P
+\end{align*}
+o usando due chiavi
+\begin{align*}
+	&\textbf{Encryption}\qquad& P\to\boxed{\ei{1}{P}}\sa{A}\boxed{\di{2}{A}}\sa{B}\boxed{\ei{1}{B}}\to C\\
+	&\textbf{Decryption}\qquad&C\to\boxed{\di{1}{C}}\sa{B}\boxed{\ei{2}{B}}\sa{A}\boxed{\di{1}{A}}\to P
+\end{align*}
+in questo modo, TDES è compatibile con lo standard DES ($\ki{2}=\ki{1}$). Tuttora non si conosce un attacco pratico a TDES. Un brute-force attack potrebbe richiedere fino a $2^{112}$ operazioni.
+\paragraph{AES}Advanced Encryption Standard nato per sostituire TDES. È un cifrario a blocco con blocchi di lunghezza di 128 bit e supporta chiavi di 128, 192 e 256 bit. \ul{Non è una struttura di Feistel} ma supporta le idee di Shannon di sostituizione e permutazione.
+\paragraph{TRNG}True Random Generator costruisce un flusso di bit casuale a partire da una sorgente casuale come i movimenti del mouse, la testina sul disco rigido, un qualche segnale. Quindi avviene semplicemente una conversione in digitale del segnale in ingresso.
+\paragraph{PRNG}È un algoritmo deterministico che usa il seme e una parte di elaborazione intermedia per generare un flusso pseudocasuale (è apparentemente casuale, ovvero distinguere un flusso di bit generato da un TRNG, o in generale da una sequenza veramente casualle di bit  da un flusso generato da un PRNG è estremamente difficile).
+\paragraph{PRF}Le Pseudo Random Functions sono algoritmi deterministici che prendono in ingresso, un seme, una parte di elaborazione intermedia e valori specifici del contesto (i parametri di funzione) e restituiscono un valore pseudocasuale.
+\paragraph{Message authentication Code} È un tag che permette di verificare l'integrità di un messaggio.  Per autenticare un messaggio si potrebbe utilizzare la crittografia simmetrica inserendo nel messaggio un \textbf{sequence number} per evitare il riordinamento e un \textbf{error detection code} per verificare che il messaggio non sia stato alterato. Il \textbf{timestamp} può essere messo per proteggere dai \textbf{replay attack}. Oppure il messaggio potrebbe non essere crittografato (non viene garantita l'integrità). Si aggiunge un MAC. Per creare i MAC si usano gli algoritmi MAC (spesso funzioni hash). Il MAC viene aggiunto al messaggio. Chi riceve il messaggio utilizzerà lo stesso algoritmo MAC per calcolarlo sul messaggio e confrontarlo con il MAC ricevuto.
+\paragraph{Funzioni hash one-way}È una funzione che preso un messaggio restituiscono un \textit{digest} di taglia fissata. Le funzioni hash in generale non prendono chiavi segrete in input. Ci sono tre modi per aggiungere il MAC al messaggio:
+\begin{enumerate}
+	\item $C=\ei{}{[M\conc \hs{M}]}\xrightarrow{\textit{invio}}\di{}{C}$ da cui si ricava $\hs{M}$ che viene confrontato con il calcolo dell'hash su M.
+	\item $C=\er{\ki{PU}}{{M\conc \hs{M}}}\xrightarrow{\textit{invio}}\dr{\ki{PR}}{C}$ da cui si ricava $\hs{M}$ che viene confrontato con il calcolo dell'hash su $M$.
+	\item Si concatena al messaggio uno shared secret $S$ in modo da ottenere $[S\conc M]$ e si calcola $\hs{[S\conc M]}$. Si invia il messaggio nella forma $[M\conc \hs{[S\conc M]}]$. Il ricevente estrae il messaggio $M$, gli applica lo shared secret $S$, calcola $\hs{S\conc M}$ e lo confronta con quello ricevuto.
+\end{enumerate}
+In generale, le funzioni \textbf{one-way} sono facili da calcolare ma difficili da invertire, ovvero esistono algoritmi che possono calcolare la funzione $f(x)$ in tempo polinomiale nella taglia dell'input ma anche che nessun algoritmo probabilisticamente polinomiale può calcolare una controimmagine di $f(x)$ a meno di una probabilità trascurabile, quando $x$ viene scelta in modo casuale.
+\paragraph{Funzioni hash sicure}Una funzione hash è caratterizzata da uno dei livelli di sicurezza:
+\begin{itemize}
+	\bitem{sicurezza debole}dato un messaggio $M$, è computazionalmente ``difficile'' trovare un secondo messaggio $M'$ tale che $\hs{M}=\hs{M'}$;
+	\bitem{sicurezza forte}è computazionalmente ``difficile'' trovare una coppia di messaggi $(M,M')$ tali che $\hs{M}=\hs{M'}$;
+\end{itemize}
+e le seguenti proprietà:
+\begin{itemize}
+	\bitem{resistenza alla preimmagine}sia computazionalmente intrattabile la ricerca di una stringa in input che dia un hash uguale a un dato hash;
+	\bitem{resistenza alla seconda preimmagine}sia computazionalmente intrattabile la ricerca di una stringa in input che dia un hash uguale a quello di una data stringa;
+	\bitem{resistenza alle collisioni}sia computazionalmente intrattabile la ricerca di una coppia di stringhe in input che diano lo stesso hash.
+\end{itemize}
+	\paragraph{SHA}Vengono create con un meccanismo di coodifica a blocchi e concatenati come nella CBC (Cipher Block Chain). Il messaggio viene spezzato in blocchi della stessa dimensione. 
+	\begin{figure}[thbp]
+		\centering
+		\includegraphics[width=.676\linewidth]{sha}
+	\end{figure}
+	Più grande è un hash, meglio è:  dato che i testi possibili, con dimensione finita maggiore dell'hash, sono più degli hash possibili, per il principio dei cassetti ad almeno un hash corrisponderanno più testi possibili. Più grande è il blocco più grande è l'insieme degli hash possibili, perché è più grande la rappresentazione che codifica un codice hash. 
+	\begin{table}[thbp]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|}
+			\hline
+			&\textbf{SHA-1}&\textbf{SHA-224}&\textbf{SHA-256}&\textbf{SHA-384}&\textbf{SHA-512}\\
+			\hline
+			\textbf{Message digest size}&160&224&256&384&512\\
+			\hline
+			\textbf{Message size}&$<2^{64}$&$<2^{64}$&$<2^{64}$&$<2^{128}$&$<2^{128}$\\
+			\hline
+			\textbf{Block size}&512&512&512&1024&1024\\
+			\hline
+			\textbf{Word size}&32&32&32&64&64\\
+			\hline
+			\textbf{Number of steps}&80&64§§&64&80&80\\
+			\hline
+		\end{tabular}
+	\end{table}
+	\paragraph{HMAC}Si basa sul prendere una funzione hash (che hanno la caratteristica di essere veloci) e renderla crittografica attraverso l'utilizzo di una chiave. È utilizzato in IP Security, in TLS e in SET\footnote{Secure Eletronic Transaction.}. Ha un meccanismo che permette di scegliere la funzione hash da utilizzare come se fosse un plugin. È semplice rimpiazzare una funzione hash con un'altra. HMAC non altera le performance delle funzioni hash sottostanti.
+	$$\text{HMAC}(K,M)=\hs{(K^+\oplus \textit{opad})\parallel\hs{(K^+\oplus\textit{ipad})\parallel M}}$$
+	\ul{HMAC permette di fare un hash crittografico} che data una chiave e un messaggio, restituisce l'hash crittografico. Dapprima viene fatto il padding su $K$ con degli zeri e viene indicata con  $K^+$. In questo modo la lunghezza della chiave sarà sempre la stessa (quella desiderata). I parametri \textit{ipad} e \textit{opad} rappresentano rispettivamente i valori esadecimali 36 e 5C. con $\parallel$ si indica la giustapposizione degli elementi. Le funzioni hash vengono annidate. La chiave è argomento delle funzioni di entrambe le funzioni hash che sono annidate. 
+	\paragraph{CMAC} Si prende il messaggio, lo suddivide in blocchi della stessa dimensione, ciascuno dei quali viene messo in XOR con il risultato precedente (tranne per il primo blocco) con il blocco sovrastante per essere poi passato ad un algoritmo di crittografia simmetrica come AES o TDES. Non è parallelizzabile. È più pesante rispetto ad HMAC. 
+	
+\paragraph{Diffie-Hellman e il meccanismo di scambio delle chiavi pubbliche}
+\begin{figure}[thbp]
+	\centering
+	\includegraphics[width=.7\linewidth]{DiffieHellman}
+	\caption{algoritmo Diffie Hellman.}
+	\label{fig:dh}
+\end{figure}
+	L'obbiettivo di \ul{distribuire le chiavi simmetriche} e \ul{come fare le firme digitali.} Diffie e Hellman proposero un'idea di algoritmo (\textbf{non un algoritmo!}) per fare la crittografia asimmetrica con due chiavi separate. In generale, più lunga è una chiave, più è sicura.  
+
+	Permette di scambiare le chiavi segrete in modo sicuro (\cref{fig:dh}) basando tale meccanismo sul calcolo dei logaritmi discreti. È computazionalmente difficile calcolare il logaritmo discreto (calcolare l'esponente conoscendo la base e il numero davanti al modulo). 
+	 DH così come è stato proposto non è sicuro, è vulnerabile ad attacco man-in-the-middle. Questo perché manca autenticazione nel protocollo. Più volte a lezione si indica con ``mezza chiave'' quella che qui si indica con ``chiave pubblica''.
+	
+	\paragraph{Uso sistemi crittografici a chiave pubblica }  Usati per:
+	\begin{enumerate}
+		\bitem{crittografare/decrittografare}il mittente cifra un messaggio con la chiave pubblica del destinatario;
+		\bitem{firma digitale}il mittente firma un messaggio con la propria chiave privata;
+		\bitem{scambio di chiavi}due parti cooperano per scambiare una chiave di sessione.
+	\end{enumerate}
+	
+	\paragraph{RSA}Primo algoritmo ad implementare l'idea di Diffie e Hellman.  
+	
+\end{document}

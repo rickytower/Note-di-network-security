@@ -1,51 +1,5 @@
 \documentclass[10pt,a4paper]{article}
-\usepackage[italian]{babel}
-\usepackage{geometry}
-\usepackage{graphicx}
-\usepackage{mathtools}
-\usepackage{hyperref}
-\usepackage{amsmath}
-\usepackage{cleveref}
-\usepackage{rotating}
-\usepackage{pdflscape}
-\usepackage{xspace}
-\usepackage{subcaption}
-\usepackage{array}
-\usepackage{soul}
-\usepackage{ragged2e}
-\usepackage[shortlabels]{enumitem}
-\usepackage{multirow}
-\usepackage{fancyvrb}
-\usepackage[dvipsnames]{xcolor}
-\crefname{section}{sezione}{sezioni}
-\renewcommand{\underline}{\ul}
-\newcolumntype{x}[1]{>{\RaggedLeft\hspace{0pt}}p{#1}}
-\newcolumntype{y}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
-\newcolumntype{z}[1]{>{\Centering\hspace{0pt}}p{#1}}
-\newtheorem{theorem}{Teorema}
-\newcommand{\bitem}[1]{\item\textbf{#1:}\xspace}
-\newcommand{\er}[2]{\text{E}({#1,[#2]})}
-\newcommand{\dr}[2]{\text{D}(\uppercase{#1,#2})}
-\newcommand{\p}[2]{\text{\uppercase{#1}}_\textit{{#2}}}
-\newcommand{\pu}[1]{\p{PU}{#1}}
-\newcommand{\pr}[1]{\p{PR}{#1}}
-\newcommand{\ks}{\p{K}{s}}
-\newcommand{\ki}[1]{{\p{K}{#1}}}
-\newcommand{\ts}[1]{\textit{TS}_{#1}}
-\newcommand{\lft}[1]{\textit{Lifetime}_{{#1}}}
-\newcommand{\auth}[1]{\textit{Authenticator}_{{#1}}}
-\newcommand{\tk}[1]{\textit{Ticket}_{{#1}}}
-\newcommand{\uc}[1]{\text{\uppercase{#1}}}
-\newcommand{\ei}[2]{\textit{E}_{\ki{#1}}(#2)}
-\newcommand{\n}[1]{\p{N}{#1}}
-\newcommand{\id}[1]{\p{ID}{#1}}
-\newcommand{\crt}[1]{\ll#1\gg}
-\newcommand{\conc}{\parallel}
-\newcommand{\tab}{\colon\quad}
-\newcommand{\hs}[1]{\text{H}(#1)}
-\newcommand{\ad}[1]{\p{AD}{#1}}
-\newtheorem{definition}{Definizione}
-\newtheorem{assumption}{Assunzione di sicurezza}
+\input{../preambolo.tex }
 \title{Lecture Kerberos}
 \author{Riccardo Torre}
 \begin{document}
@@ -112,4 +66,5 @@
 	\paragraph{Realms}Kerberos è \textbf{scalabile}, è possibile mettere insieme dei realm, sistemi kerberizzati (AS,TGS e i vari servizi). Si fa uno sharing del database centralizzato di tutte le risorse disponibili localizzato sul Kerberos master computer system. C'è una confederazione di realms. I vari realm hanno una copia del database centralizzato. C nel realm A si autentica con l'AS e ottiene un ticket per presentarlo al TGS di A specificando di voler utilizzare il servizio S del realm B. Dunque il TGS crea un apposito ticket e lo restituisce a C. Questo ticket viene presentato al TGS di B perché è lui che amministra e gestisce i servizi nel realm B (e non il TGS nel realm A). C'è una relazione di fiducia tra i due TGS (TGS realm A con TGS realm B). Quindi il TGS di B restituisce il ticket da presentare al server che offre il servizio S.
 	\paragraph{Numero di chiavi nell'autenticazione cross-realms}Supponendo che ci siano $n$ realm, il realm A per poter parlare con gli altri $n-1$ realm ha bisogno di $\frac{n(n-1)}{2}$ chiavi. Questa formula è derivata dal calcolo degli archi di un grafo completo. Se si modellano i realms come i nodi di un grafo completo, e gli archi che collegano i TGS dei vari realms, per ciascun nodo si contano il numero di archi uscenti e i nodi sono $n$. Dato che ogni arco verrà contato due volte (si pensi al caso di un grafo completo composto da due nodi $A\to B$ e $B\to A$) è necessario effettuare la divisione per 2.
 	\paragraph{v4 vs v5} AES al posto di DES, ticket lifetime con tuning al posto di ticket da 24 h, qualsiasi net address e non solo IP address, ordinamento dei byte dei messaggi, authentication forwarding che permette di evitare di chiedere un ticket per risorse correlate (ad esempio chiedere il ticket per la stampante e chiedere il ticket per il file da stampare diventa chiedere il ticket per stampare il file), autenticazione interrrealm meno chiavi (meno di $O(n^2)$), non c'è più un encoding annidato del ticket, cioè il ticket è stato separato dal messaggio che lo conteneva.
+
 \end{document}
