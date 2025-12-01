@@ -12,16 +12,14 @@
 	\paragraph{Attori}
 	\begin{enumerate}
 		\bitem{AS = Authentication Server} conosce gli hash delle password di tutti gli utenti e li memorizza in un database centralizzato e crea ogni volta una chiave simmetrica con il client sfruttando l'hash della password come seme da passare a funzioni pseudo random; condivide un'unica chiave con tutti i server;
-		\bitem{TGS = Ticket Granting Server}; emette i ticket agli utenti autenticati dall'AS necessari per ottenere un particolare servizio. Il ticket ha una durata (\textit{Lifetime}) ben precisa e può essere riutilizzato. Condivide le chiavi con tutte le risorse (gli application server).
+		\bitem{TGS = Ticket Granting Server} emette i ticket agli utenti autenticati dall'AS necessari per ottenere un particolare servizio. Il ticket ha una durata (\textit{Lifetime}) ben precisa e può essere riutilizzato. Condivide le chiavi con tutte le risorse (gli application server).
 		\bitem{Application server}forniscono un determinato servizio.
 	\end{enumerate}
 	\paragraph{Ticket}
 	\begin{itemize}
-		\item Ticket per entrare nel gioco che hanno una validità $Time_1$ ore $\to$ crittografia più forte;
-		\item Ticket per utilizzare un servizio che hanno una validità $Time_2$ minuti $\to$ crittografia leggera;
+		\item Ticket per entrare nel gioco che hanno una validità $\lft{1}$ ore $\to$ crittografia più forte;
+		\item Ticket per utilizzare un servizio che hanno una validità $\lft{2}$ minuti $\to$ crittografia leggera;
 	\end{itemize}
-	$$Time_1>Time_2$$
-	e 
 	$$\lft{1}>\lft{2}$$
 	ovvero la durata del ticket per entrare nel gioco è maggiore di quella del ticket per utilizzare un servizio.
 	Man mano si usano ticket che durano sempre di meno.

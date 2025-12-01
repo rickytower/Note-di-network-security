@@ -5,8 +5,8 @@
 \begin{document}
 	\maketitle
 \section{Lecture 13/05/2025}
-\paragraph{Le reti di sostituzione-permutazione di Calude Shannon}Nel 1949 Claude Shannon introdusse l'idea di reti di permutazione-sostituzione (S-P)  che sono basate su due operazioni crittografiche primitive ossia le sostituzioni con le S-box che sostituiscono i simboli di input confondendo il contenuto del messaggio e le permutazioni con el P-box che permettono di diffondere i bit tra le S-box dissipando la struttura statistica del contenuto del messaggio. I cifrari che hanno questa struttura si dicono \textbf{cifrari a prodotto}.
-\paragraph{Feistel}Nel 1973 Feistel crea il cifrario omonimo che si basa sull'idea di rete S-P proposta da Shannon. Ad ogni \textbf{round }si prende un blocco, lo si divide a metà. La parte di destra viene passata ad una funzione di round (funzione di Feistel) che prende in input oltre alla parte destra una chiave . La parte di sinistra viene messa in XOR con il risultato della funzione di Feistel. Successivamente la parte sinistra e destra vengono scambiate. Vengono fatti 16 round. Dopo il 16 esimo round (17°esimo passaggio) vengono scambiate le due metà. Se nell'operazione di cifratura vengono usate le chiavi nell'ordine $\ki{1},\dots,\ki{16}$, e al 17°esimo passaggio viene fatto lo scambio delle due metà del blocco, nella decifratura i passaggi devono essere svolti nell'ordine inverso, ovvero, si scambiano le due metà, si applicano i round usando le chiavi nell'ordine $\ki{16},\dots,\ki{1}$.
+\paragraph{Le reti di sostituzione-permutazione di Claude Shannon}Nel 1949 Claude Shannon introdusse l'idea di reti di permutazione-sostituzione (S-P)  che sono basate su due operazioni crittografiche primitive ossia le sostituzioni con le S-box che sostituiscono i simboli di input confondendo il contenuto del messaggio e le permutazioni con le P-box che permettono di diffondere i bit tra le S-box dissipando la struttura statistica del contenuto del messaggio. I cifrari che hanno questa struttura si dicono \textbf{cifrari a prodotto}.
+\paragraph{Feistel}Nel 1973 Feistel crea il cifrario omonimo che si basa sull'idea di rete S-P proposta da Shannon. Ad ogni \textbf{round }si prende un blocco, lo si divide a metà. La parte di destra viene passata ad una funzione di round (funzione di Feistel) che prende in input oltre alla parte destra una chiave. La parte di sinistra viene messa in XOR con il risultato della funzione di Feistel. Successivamente la parte sinistra e destra vengono scambiate. Vengono fatti 16 round. Dopo il 16 esimo round (17°esimo passaggio) vengono scambiate le due metà. Se nell'operazione di cifratura vengono usate le chiavi nell'ordine $\ki{1},\dots,\ki{16}$, e al 17°esimo passaggio viene fatto lo scambio delle due metà del blocco, nella decifratura i passaggi devono essere svolti nell'ordine inverso, ovvero, si scambiano le due metà, si applicano i round usando le chiavi nell'ordine $\ki{16},\dots,\ki{1}$.
 
 \paragraph{DES}È l'implementazione del cifrario di Feistel, Data Encryption Standard. È stato attaccato per il rapido avanzamento tecnologico, non perché non fosse sicuro. Si decise di utilizzare una chiave da 56 bit perché la computazione con chiavi più lunghe per la tecnologia dell'epoca era abbastanza onerosa. Nel 1999 DES è stato attaccato con un brute force attack. Ci sono dei sospetti che il NSA avesse modificato le S-box introducendo una backdoor. 
 \paragraph{DDES}È suscettibile ad attacco Meet-In-the-Middle. È un attacco \textbf{chosen plaintext}:
@@ -30,9 +30,9 @@ o usando due chiavi
 in questo modo, TDES è compatibile con lo standard DES ($\ki{2}=\ki{1}$). Tuttora non si conosce un attacco pratico a TDES. Un brute-force attack potrebbe richiedere fino a $2^{112}$ operazioni.
 \paragraph{AES}Advanced Encryption Standard nato per sostituire TDES. È un cifrario a blocco con blocchi di lunghezza di 128 bit e supporta chiavi di 128, 192 e 256 bit. \ul{Non è una struttura di Feistel} ma supporta le idee di Shannon di sostituizione e permutazione.
 \paragraph{TRNG}True Random Generator costruisce un flusso di bit casuale a partire da una sorgente casuale come i movimenti del mouse, la testina sul disco rigido, un qualche segnale. Quindi avviene semplicemente una conversione in digitale del segnale in ingresso.
-\paragraph{PRNG}È un algoritmo deterministico che usa il seme e una parte di elaborazione intermedia per generare un flusso pseudocasuale (è apparentemente casuale, ovvero distinguere un flusso di bit generato da un TRNG, o in generale da una sequenza veramente casualle di bit  da un flusso generato da un PRNG è estremamente difficile).
-\paragraph{PRF}Le Pseudo Random Functions sono algoritmi deterministici che prendono in ingresso, un seme, una parte di elaborazione intermedia e valori specifici del contesto (i parametri di funzione) e restituiscono un valore pseudocasuale.
-\paragraph{Message authentication Code} È un tag che permette di verificare l'integrità di un messaggio.  Per autenticare un messaggio si potrebbe utilizzare la crittografia simmetrica inserendo nel messaggio un \textbf{sequence number} per evitare il riordinamento e un \textbf{error detection code} per verificare che il messaggio non sia stato alterato. Il \textbf{timestamp} può essere messo per proteggere dai \textbf{replay attack}. Oppure il messaggio potrebbe non essere crittografato (non viene garantita l'integrità). Si aggiunge un MAC. Per creare i MAC si usano gli algoritmi MAC (spesso funzioni hash). Il MAC viene aggiunto al messaggio. Chi riceve il messaggio utilizzerà lo stesso algoritmo MAC per calcolarlo sul messaggio e confrontarlo con il MAC ricevuto.
+\paragraph{PRNG}È un algoritmo deterministico che usa il seme e una parte di elaborazione intermedia per generare un flusso pseudocasuale (è apparentemente casuale, ovvero distinguere un flusso di bit generato da un TRNG, o in generale da una sequenza veramente casuale di bit  da un flusso generato da un PRNG è estremamente difficile).
+\paragraph{PRF}Le Pseudo Random Functions sono algoritmi deterministici che prendono in ingresso, un seme, una parte di elaborazione intermedia e valori specifici del contesto e restituiscono un valore pseudocasuale.
+\paragraph{Message Authentication Code} È un tag che permette di verificare l'integrità di un messaggio.  Per autenticare un messaggio si potrebbe utilizzare la crittografia simmetrica inserendo nel messaggio un \textbf{sequence number} per evitare il riordinamento e un \textbf{error detection code} per verificare che il messaggio non sia stato alterato. Il \textbf{timestamp} può essere messo per proteggere dai \textbf{replay attack}. Oppure il messaggio potrebbe non essere crittografato (non viene garantita la confidenzialità). Si aggiunge un MAC. Per creare i MAC si usano gli algoritmi MAC (spesso funzioni hash). Il MAC viene aggiunto al messaggio. Chi riceve il messaggio utilizzerà lo stesso algoritmo MAC per calcolarlo sul messaggio e confrontarlo con il MAC ricevuto.
 \paragraph{Funzioni hash one-way}È una funzione che preso un messaggio restituiscono un \textit{digest} di taglia fissata. Le funzioni hash in generale non prendono chiavi segrete in input. Ci sono tre modi per aggiungere il MAC al messaggio:
 \begin{enumerate}
 	\item $C=\ei{}{[M\conc \hs{M}]}\xrightarrow{\textit{invio}}\di{}{C}$ da cui si ricava $\hs{M}$ che viene confrontato con il calcolo dell'hash su M.
@@ -71,26 +71,26 @@ e le seguenti proprietà:
 			\hline
 			\textbf{Word size}&32&32&32&64&64\\
 			\hline
-			\textbf{Number of steps}&80&64§§&64&80&80\\
+			\textbf{Number of steps}&80&64&64&80&80\\
 			\hline
 		\end{tabular}
 	\end{table}
 	\paragraph{HMAC}Si basa sul prendere una funzione hash (che hanno la caratteristica di essere veloci) e renderla crittografica attraverso l'utilizzo di una chiave. È utilizzato in IP Security, in TLS e in SET\footnote{Secure Eletronic Transaction.}. Ha un meccanismo che permette di scegliere la funzione hash da utilizzare come se fosse un plugin. È semplice rimpiazzare una funzione hash con un'altra. HMAC non altera le performance delle funzioni hash sottostanti.
 	$$\text{HMAC}(K,M)=\hs{(K^+\oplus \textit{opad})\parallel\hs{(K^+\oplus\textit{ipad})\parallel M}}$$
-	\ul{HMAC permette di fare un hash crittografico} che data una chiave e un messaggio, restituisce l'hash crittografico. Dapprima viene fatto il padding su $K$ con degli zeri e viene indicata con  $K^+$. In questo modo la lunghezza della chiave sarà sempre la stessa (quella desiderata). I parametri \textit{ipad} e \textit{opad} rappresentano rispettivamente i valori esadecimali 36 e 5C. con $\parallel$ si indica la giustapposizione degli elementi. Le funzioni hash vengono annidate. La chiave è argomento delle funzioni di entrambe le funzioni hash che sono annidate. 
+	\ul{HMAC permette di fare un hash crittografico} che data una chiave e un messaggio, restituisce l'hash crittografico. Dapprima viene fatto il padding su $K$ con degli zeri e viene indicata con  $K^+$. In questo modo la lunghezza della chiave sarà sempre la stessa (quella desiderata). I parametri \textit{ipad} e \textit{opad} rappresentano rispettivamente i valori esadecimali 36 e 5C. Con $\parallel$ si indica la giustapposizione degli elementi. Le funzioni hash vengono annidate. La chiave è argomento delle funzioni di entrambe le funzioni hash che sono annidate. 
 	\paragraph{CMAC} Si prende il messaggio, lo suddivide in blocchi della stessa dimensione, ciascuno dei quali viene messo in XOR con il risultato precedente (tranne per il primo blocco) con il blocco sovrastante per essere poi passato ad un algoritmo di crittografia simmetrica come AES o TDES. Non è parallelizzabile. È più pesante rispetto ad HMAC. 
 	
-\paragraph{Diffie-Hellman e il meccanismo di scambio delle chiavi pubbliche}
+\paragraph{Diffie-Hellman e l'idea delle chiavi pubbliche e private}
 \begin{figure}[thbp]
 	\centering
 	\includegraphics[width=.7\linewidth]{DiffieHellman}
 	\caption{algoritmo Diffie Hellman.}
 	\label{fig:dh}
 \end{figure}
-	L'obbiettivo di \ul{distribuire le chiavi simmetriche} e \ul{come fare le firme digitali.} Diffie e Hellman proposero un'idea di algoritmo (\textbf{non un algoritmo!}) per fare la crittografia asimmetrica con due chiavi separate. In generale, più lunga è una chiave, più è sicura.  
+	Al tempo non esisteva un meccanismo per  \ul{distribuire le chiavi simmetriche} e \ul{come fare le firme digitali.} Diffie e Hellman proposero un'idea di algoritmo (\textbf{non un algoritmo!}) per fare la crittografia asimmetrica con due chiavi separate. In generale, più lunga è una chiave, più è sicura.  
 
-	Permette di scambiare le chiavi segrete in modo sicuro (\cref{fig:dh}) basando tale meccanismo sul calcolo dei logaritmi discreti. È computazionalmente difficile calcolare il logaritmo discreto (calcolare l'esponente conoscendo la base e il numero davanti al modulo). 
-	 DH così come è stato proposto non è sicuro, è vulnerabile ad attacco man-in-the-middle. Questo perché manca autenticazione nel protocollo. Più volte a lezione si indica con ``mezza chiave'' quella che qui si indica con ``chiave pubblica''.
+	\paragraph{Algoritmo Diffie-Hellman per lo scambio di chiavi }Permette di scambiare le chiavi segrete in modo sicuro (\cref{fig:dh}) basando tale meccanismo sul calcolo dei logaritmi discreti. È computazionalmente difficile calcolare il logaritmo discreto (calcolare l'esponente conoscendo la base e il numero dietro al modulo). 
+	 DH così come è stato proposto non è sicuro; è vulnerabile ad attacco man-in-the-middle. Questo perché manca autenticazione nel protocollo. Più volte a lezione si indica con ``mezza chiave'' quella che qui si indica con ``chiave pubblica''.
 	
 	\paragraph{Uso sistemi crittografici a chiave pubblica }  Usati per:
 	\begin{enumerate}
@@ -99,6 +99,6 @@ e le seguenti proprietà:
 		\bitem{scambio di chiavi}due parti cooperano per scambiare una chiave di sessione.
 	\end{enumerate}
 	
-	\paragraph{RSA}Primo algoritmo ad implementare l'idea di Diffie e Hellman.  
+	\paragraph{RSA}Primo algoritmo ad implementare l'idea di Diffie e Hellman di chiave pubblica e chiave privata.  
 	
 \end{document}
