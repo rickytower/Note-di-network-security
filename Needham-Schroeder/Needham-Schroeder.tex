@@ -1,0 +1,97 @@
+\documentclass[10pt,a4paper]{article}
+\input{../preambolo.tex}
+\title{Lecture: protocollo di Needham-Schroeder}
+\author{Riccardo Torre}
+\begin{document}
+	\maketitle
+	\begin{align*}
+		A\to S \acolon A,B\\
+		S\to A\acolon \ki{AB}\\
+		B\to A\acolon \ki{AB},A
+	\end{align*}
+	\begin{assumption}
+		L'avversario è capace di ascoltare tutti i messaggi in un protocollo di sicurezza. 
+		\end{assumption}
+		Dunque è necessaria la crittografia dei messaggi.
+		\separate
+		\begin{assumption}[Perfect cryptography assumption]
+			L'attaccante in generale non può rompere la crittografia.\label{asp:perfect-critto}
+		\end{assumption}
+		\begin{align*}
+			A\to S\acolon A,B\\ S\to A\acolon \ei{AS}{\ki{AB}},\ei{BS}{\ki{AB}}\\
+			A\to B\acolon \ei{BS}{\ki{AB}},A \qquad\longrightarrow\qquad \text{C intercetta il messaggio}\\
+			C \to B\acolon \ei{BS}{\ki{AB}},D
+		\end{align*}
+		C'è un attacco peggiore di questo. In questo caso, C è autenticato (è un insider del sistema, perché S accetta la sua richiesta).
+		\begin{align*}
+			A\to S\acolon A,B\qquad\text{C intercetta il messaggio}\\
+			C\to S \acolon A,C\\
+			S\to C\acolon \ei{AS}{\ki{AC}},\ei{CS}{\ki{AC}}\\
+			C\to A\acolon \ei{AS}{\ki{AC}},\ei{CS}{\ki{AC}}\qquad\text{A non si accorge che C sta nel mezzo}\\
+			A\to C\acolon \ei{CS}{\ki{AC}},A
+			\end{align*}
+			Le chiavi non sono legate crittograficamente all'identità di chi deve farne uso (\textbf{binding attack}). L'attacco appena descritto è inoltre un \textbf{man-in-the-middle} e uno \textbf{spoofing attack}.
+			\begin{assumption}
+				L'avversario può essere un partecipante legittimo del protocollo (un \textit{insider}), o una parte esterna (un \textit{outsider}) o una combinazione delle precedenti.
+			\end{assumption}
+			\separate
+			\begin{align*}
+				A\to S\acolon A,B\\
+				S\to A\acolon \ei{AS}{\ki{AB},B},\ei{BS}{\ki{AB},A}\\
+				A\to B\acolon \ei{BS}{\ki{AB},A}
+			\end{align*}
+			Questo fix lega crittograficamente la chiave all'entità che deve utilizzarla. Ma questo protocollo è ancora vulnerabile ad un \textbf{replay attack}.
+			\begin{align*}
+				A\to S \acolon A,B\qquad\longrightarrow\text{C intercetta la richiesta, la blocca e si finge di essere il server}\\ C\to A \acolon \ei{AS}{\ki{AB}', B},\ei{BS}{\ki{AB}',A}\qquad\longrightarrow\substack{\text{dove $\ki{AB}'$ è una vecchia chiave di sessione}\\ \text{intercettata da $C$ in una vecchia interazione }\\\text{tra $A$ e $S$}}\\ A\to B\acolon \ei{BS}{\ki{AB}',A}
+			\end{align*}
+			La risposta in seguito alla richiesta di A ad S è di una vecchia interazione tra A e S, solo che A non se ne accorge perché manca questa informazione nel protocollo. Bisogna legare le richieste alle risposte con i \textbf{nonce} o \textbf{challenge-responce}. Arriviamo così al protocollo di \ns.
+			\separate
+			\paragraph{Il protocollo di \ns}
+			\begin{align*}
+				A\to S\acolon A,B,\n{A}\\ S\to A\acolon \ei{AS}{\ki{AB}, B, \n{A},\ei{BS}{\ki{AB},A}}\\A \to B \acolon \ei{BS}{\ki{AB},A}\\B\to A\acolon \ei{AB}{\n{B}}\qquad\longrightarrow \text{viene fatto una sorta di acknowledgement}\\ A\to B\acolon \ei{AB}{\n{B}-1}
+			\end{align*}
+			Anche questo protocollo è vulnerabile al \textbf{replay attack} sul messaggio $B\to A \colon \ei{AB}{\n{B}}$. $A$ ha veramente la garanzia che la chiave è fresh, ma $B$ no! 
+			\paragraph{Attacco al protocollo \ns}
+			In questo scenario, viene indicata con $\ki{$\overline{AB}$}$ la chiave compromessa, che $C$ utilizza per compiere il \textbf{replay attack} verso $B$.
+		\begin{align*}
+			A\to S\acolon A,B,\n{A}\\ S\to A\acolon \ei{AS}{\ki{AB}, B, \n{A},\ei{BS}{\ki{AB},A}}\\C \to B \acolon \ei{BS}{\ki{$\overline{AB}$},A}\\B\to C\acolon \ei{$\overline{AB}$}{\n{B}}\qquad\longrightarrow \text{viene fatto una sorta di acknowledgement}\\ C\to B\acolon \ei{$\overline{AB}$}{\n{B}-1}
+		\end{align*}
+		
+		$B$ è convinto che sia stato $A$ a mandargli la $\ki{$\overline{AB}$}$.  \ul{Qui il nonce $\n{B}$ viene inviato dopo che è stata ricevuta la chiave!} Questo non permette di concludere che la chiave ricevuta provenga da un'interazione recente!
+		
+		Il problema è che $B$ non si accorge che la chiave è vecchia perché il nonce $\n{B}$ non è legato crittograficamente alla chiave $\ki{AB}$ e viene usato più come un acknowledgment che come un qualcosa per verificare la freschezza della chiave di sessione. Invece $A$ può rendersi conto che la chiave di sessione è fresca perché il nonce che ha inviato, $\n{A}$, è legato crittograficamente alla chiave $\ki{AB}$ e non può essere modificato da un attaccante nell'ipotesi che valga l'\cref{asp:perfect-critto}.
+		\paragraph{Fix a questo attacco}
+		\begin{align*}
+			B\to A\acolon B,\n{B}\\
+			A\to S \acolon A,B,\n{A},\n{B}\\
+			S\to A\acolon \ei{AS}{\ki{AB},B,\n{A}}, \ei{BS}{\ki{AB},A,\n{B}}\\
+			A\to B\acolon \ei{BS}{\ki{AB},A,\n{B}}
+		\end{align*}
+		In questo caso i nonce inviati da $A$ e $B$ vengono legati crittograficamente alla chiave e un attacco come il precedente non può avvenire.
+		\separate
+		\paragraph{Il protocollo di \ns a chiave pubblica} Questa è la versione di \ns usando chiavi asimmetriche! L'obbiettivo di \ns in generale è di creare una sorta di \textit{ping autenticato}. In questo caso, l'interazione con il serve viene omessa.
+		\begin{align*}
+			A\to B \acolon \ei{B}{\n{A},A}\\
+			B\to A\acolon \ei{A}{\n{A},\n{B}}\\
+			A\to B\acolon \ei{B}{\n{B}}
+		\end{align*}
+		\paragraph{Attacco man-in-the-middle a \ns a chiave pubblica}$C$ è un insider e $A$ non sa che è cattivo. $A$ decide di aprire una connessione con lui. 
+		\begin{align*}
+			A\to C \acolon \ei{C}{\n{A},A}\\
+			C\to B\acolon\ei{B}{\n{A},A}\\
+			B\to C\acolon \ei{A}{\n{A},\n{B}}\qquad\longrightarrow\qquad\substack{\text{$C$ non può aprire il messaggio per leggere $\n{B}$}\\\text{perché codificato con $\ki{A}$}}\\
+			C\to A\acolon \ei{A}{\n{A},\n{B}}\\
+			A\to C\acolon \ei{C}{\n{B}}\\
+			C\to B\acolon \ei{B}{\n{B}}
+		\end{align*}
+		L'attaccante ha fatto uno spoofing attack nei confronti di Bob, spacciandosi per Alice. Inoltre questo è un \textbf{binding attack}.
+		\paragraph{Soluzione di Lowe}
+		\begin{align*}
+			A\to C \acolon \ei{C}{\n{A},A}\\
+			C\to B\acolon\ei{B}{\n{A},A}\\
+			B\to C\acolon \ei{A}{\n{A},\n{B},B}\qquad\longrightarrow\qquad\substack{\text{$B$ risponde con un messaggio corretto ovvero lega}\\\text{crittograficamente  il nonce da lui prodotto alla sua identità}}\\
+			C\to A\acolon \ei{A}{\n{A},\n{B}, B}\qquad\longrightarrow\qquad\text{Bob? Ma io volevo parlare con Charlie!}\\
+			&\texttt{\color{red}! Abort del protocollo !}
+		\end{align*}
+		Il protocollo non è sound.
+\end{document}

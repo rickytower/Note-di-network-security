@@ -1,9 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2025.11.21)  3 DEC 2025 14:51
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2025.11.21)  3 DEC 2025 17:19
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
-**kerberos.tex
-(./kerberos.tex
+**Needham-Schroeder.tex
+(./Needham-Schroeder.tex
 LaTeX2e <2022-11-01> patch level 1
 L3 programming layer <2023-02-22>
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
@@ -332,6 +332,17 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip57
 )
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
 (/usr/share/texlive/texmf-dist/tex/latex/cleveref/cleveref.sty
 Package: cleveref 2018/03/27 v0.21.4 Intelligent cross-referencing
 Package cleveref Info: `hyperref' support loaded on input line 2370.
@@ -513,8 +524,8 @@ File: l3backend-xetex.def 2023-01-16 L3 backend support: XeTeX
 \g__pdf_backend_annotation_int=\count313
 \g__pdf_backend_link_int=\count314
 )
-(./kerberos.aux)
-\openout1 = `kerberos.aux'.
+(./Needham-Schroeder.aux)
+\openout1 = `Needham-Schroeder.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
 LaTeX Font Info:    ... okay on input line 5.
@@ -527,7 +538,8 @@ LaTeX Font Info:    ... okay on input line 5.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 5.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 5
 .
- (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 5.
@@ -577,25 +589,35 @@ LaTeX Font Info:    ... okay on input line 5.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 5.
-(./kerberos.out) (./kerberos.out)
+(./Needham-Schroeder.out) (./Needham-Schroeder.out)
 \@outlinefile=\write4
-\openout4 = `kerberos.out'.
+\openout4 = `Needham-Schroeder.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
- [1
+LaTeX Font Info:    Trying to load font information for U+msa on input line 7.
 
-] [2] [3] (./kerberos.aux)
-Package rerunfilecheck Info: File `kerberos.out' has not changed.
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 7.
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [1
+
+] [2] [3]
+(./Needham-Schroeder.aux)
+Package rerunfilecheck Info: File `Needham-Schroeder.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 16215 strings out of 477887
- 277817 string characters out of 5827407
- 1862018 words of memory out of 6000000
- 36200 multiletter control sequences out of 15000+600000
- 516912 words of font info for 59 fonts, out of 8000000 for 9000
+ 16752 strings out of 477887
+ 284204 string characters out of 5827407
+ 1869018 words of memory out of 6000000
+ 36717 multiletter control sequences out of 15000+600000
+ 519400 words of font info for 72 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 77i,12n,80p,995b,461s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 77i,20n,80p,576b,353s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on kerberos.pdf (3 pages).
+Output written on Needham-Schroeder.pdf (3 pages).
