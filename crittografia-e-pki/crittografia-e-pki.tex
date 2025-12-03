@@ -1,6 +1,6 @@
 \documentclass[10pt,a4paper]{article}
 \input{../preambolo.tex}
-\title{Lecture: concetti base di crittografia}
+\title{Lecture: concetti base di crittografia e public key infrastructures}
 \author{Riccardo Torre}
 \begin{document}
 	\maketitle
@@ -12,7 +12,7 @@
 \paragraph{DDES}È suscettibile ad attacco Meet-In-the-Middle. È un attacco \textbf{chosen plaintext}:
 $$X = \ei{i}{P}\xlongrightarrow{\quad M\quad}\ei{j}{M}=C=\ei{j}{\ei{i}{P}}\qquad i,j\in\left[0;2^{56}-1\right]$$
 \begin{enumerate}
-	\item Scegli un plaintext $P$, e applica l'algoritmo DDES per ottenere il relativo ciphertext $C$. Crea una tabella ordinata per $X$.
+	\item Scegli un plaintext $P$, una coppia di chiavi $\ki{i},\ki{j}$ e applica l'algoritmo DDES per ottenere il relativo ciphertext $C$. Crea una tabella ordinata per $X$.
 	\item Decifra $C$ con tutte le $2^{56}$ possibili chiavi $k_j$ e verifica se $X=\ei{i}{P} = \di{j}{C}$ (condizione Meet in the Middle).
 	\item Ciascuna corrispondenza della suddetta condizione è una soluzione candidata. Usare la stessa coppia di chiavi $\left (\ki{i},\ki{j}\right )$ con altre coppie $\left (P,C\right )$.
 \end{enumerate}
@@ -99,6 +99,57 @@ e le seguenti proprietà:
 		\bitem{scambio di chiavi}due parti cooperano per scambiare una chiave di sessione.
 	\end{enumerate}
 	
-	\paragraph{RSA}Primo algoritmo ad implementare l'idea di Diffie e Hellman di chiave pubblica e chiave privata.  
+	\paragraph{RSA}Primo algoritmo ad implementare l'idea di Diffie e Hellman di crittosistema a chiave pubblica - chiave privata del 1976.  Creato da Rivest, Shamir e Adleman e pubblicato nel 1997. RSA si basa sulla difficoltà di fattorizzare due numeri primi molto grandi (\textbf{problema della fattorizzazione}). 
+	\paragraph{Generazione delle chiavi in RSA}
+	\begin{enumerate}
+		\item Scegli due numeri primi $p$ e $q$, $p\ne q$.
+		\item Computa $n=pq$. 
+		\item Computa $\varphi(n)=(p-1)(q-1)$.
+		\item Seleziona un intero $e$ tale che $\gcd(\varphi(n),e)=1$ e $1<e<\varphi(n)$.
+		\item Calcola $d$ tale che $de\mod{\varphi(n)}=1$
+		\item Calcola la chiave pubblica come $\ki{pu}=\{e,n\}$
+		\item Calcola la chiave privata come $\ki{pr}=\{d,n\}$
+	\end{enumerate}
+	Un attaccante può invalidare tutto se riesce a scoprire la fattorizzazione di $n$. 
+	\paragraph{Cifratura in RSA}Il plaintext è un $M<n$. Il ciphertext si ottiene come $C=M^e\mod n$.
+	\paragraph{Decifratura in RSA} Il ciphertext è $C$.  Il plaintext si ottiene come $M=C^d\mod n$.
+	\paragraph{Digital Signature Standard (DSS)}Vengono usati esclusivamente per fare le firme digitali (non l'encryption). Devono essere in grado di garantire l'autenticazione dell'origine, la data integrity e la non repudation. Si possono usare gli algoritmi \textit{Digital Signature Algorithm} (DSA), RSA o \textit{Eliptic Curve Digital Signature} (ECDSA). Le curve ellittiche sono estremamente efficienti nell'uso della chiave perché bastano delle chiavi piccole per ottenere una crittografia forte. In generale, le firme digitali si prestano bene a lavorare sull'hash perché RSA deve lavorare con il padding per evitare brute-force. 
+	Nell'esempio a seguire, si indica con $\text{PR}$ la chiave privata di Bob e con $\text{PU}$ la chiave pubblica.
+	Bob vuole inviare il messaggio $M$ ad Alice:
 	
+	\begin{enumerate}
+		\item calcola $\hs{M}$;
+		\item firma $\hs{M}$ con la chiave privata di Bob $\dsa{\text{PR}}{\hs{M}}$;
+		\item Invia ad Alice $[M\parallel \dsa{\text{PR}}{\hs{M}}]$
+	\end{enumerate}
+	Alice riceve il messaggio $[M\parallel \dsa{\text{PR}}{\hs{M}}]$
+	\begin{enumerate}
+		\item prendi $M$ e calcola $\hs{M}$;
+		\item confronta $\hs{M}$ appena calcolato, con il valore estratto dal messaggio $[M\parallel\dsa{\text{PR}}{\hs{M}}]$ a cui viene applicato l'algoritmo DSA con la chiave pubblica di Bob $\dsa{\text{PU}}{\dsa{\text{PR}}{\hs{M}}}=\hs{M}$ ; se i valori sono uguali, il messaggio è integro e proviene da Bob.
+	\end{enumerate}
+	\paragraph{Gestione e distribuzione delle chiavi crittografiche} 
+\section{Lecture 20/03/2025}
+\paragraph{Certificati}Servono per contrastare le compromissioni delle chiavi. I certificati possono essere revocati dalle CA quando una chiave viene compromessa o è vicina alla scadenza. Vengono emessi dalle CA. 
+\paragraph{X.509}Si basa sulla crittografia asimmetrica. Viene tuttora raccomandato RSA come algoritmo crittografico, mentre per le funzioni di hash non ci sono direttive sull'utilizzo di una specifica funzione di hash (che funzione hash utilizzare è contenuta nelle informazioni che riguardano il certificato), quindi le CA utilizzano quella che ritengono più opportuna. Il certificato contiene:
+\begin{itemize}
+	\item informazioni che identificano il proprietario del certificato;
+	\item la chiave pubblica del proprietario;
+	\item informazioni che identificano la CA;
+	\item informazioni che riguardano il certificato (durata, utilizzo);
+	\item hash del certificato firmato con la chiave privata della CA.
+\end{itemize}
+Un certificato per essere autentico deve essere giustapposto al suo hash firmato con la chiave privata della CA:
+$$\ei{\pr{CA}}{\hs{\text{certificato di Bob}}}$$
+Per verificare la validità del certificato, il client utilizza la chiave pubblica della CA per verificare che la firma sia autentica (si decifra con RSA) e si utilizza la funzione di hash specificata nelle informazioni del certificato per calcolare il suo hash e confrontarlo con quello giustapposto.
+
+I certificati possono essere posti in una directory pubblica, altamente accessibile, e non protetta perché i certificati sono già intrinsecamente sicuri.
+\paragraph{Perché devo fare l'hash del certificato? Non posso firmare direttamente il certificato?}No, in quanto un certificato può avere delle dimensioni rilevanti e dunque si preferisce cifrare il suo hash (che ha una dimensione contenuta in pochi bit, ad esempio sha-256 è lungo 256 bit).
+\paragraph{Nonce}Name used only ONCE. I nonce si chiamano \textbf{challenge}, ovvero un'entità A sfida B proponendo un valore. B deve ritornare lo stesso valore ad A.
+\paragraph{Compromissione di una CA}Se una CA è compromessa, tutto ciò che è certificato da quella CA è compromesso.
+\paragraph{Modelli di trust}
+\begin{itemize}
+	\bitem{Trust diretto}tutti gli utenti sono iscritti alla stessa CA e sono legati dallo stesso legame di trust a quella CA, dunque quegli utenti hanno un legame di trust reciproco e diretto. 
+	\bitem{Trust gerarchico}quando due utenti appartengono a CA diverse; si risale l'albero di trust per arrivare ad una radice comune; supponendo che A sia certificato dalla CA $X_1$ e B dalla CA $X_2$ e che $X_1$ e $X_2$ si conoscono e sono legate da un legame di trust, si scrive $X_1\crt{X_2}\ X_2\crt{B}$ per dire che B è certificato da $X_2$ e $X_2$ è certificato da $X_1$ e che $X_2\crt{X_1}\ X_1\crt{A}$ per dire che $X_2$ certifica $X_1$ e $X_1$ certifica A -- catena di trust inversa; \textbf{forward certificate} i certificati di $X$ generati dalle altre CA; \textbf{reverse certificates} i certificati delle altre CA generati da $X$; in altre parole forward dall'alto verso il basso nella catena e reverse dal basso verso l'alto. 
+	\bitem{Web of trust}è un concetto utilizzato da PGP per stabilire l'autenticità dell'associazione chiave pubblica-utente. Un certificato non viene firmato da una CA ma da diverse entità che conoscono il possessore del certificato in una relazione di trust più o meno forte (livelli di trust). Qualsiasi utente può certificare il certificato di qualcun altro.
+\end{itemize}
 \end{document}
