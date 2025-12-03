@@ -94,4 +94,16 @@
 			&\texttt{\color{red}! Abort del protocollo !}
 		\end{align*}
 		Il protocollo non è sound.
+		\paragraph{Type flaw attack} Questo è un attacco man-in-the-middle condotto da $M$ che consiste in un \textbf{oracle attack} per fare un \textbf{type-flaw attack}.
+		\begin{align*}
+			M\to B\acolon \ei{B}{\n{A},A}\\
+			B\to S\acolon B,A\\
+			S\to B \acolon \ei{$S^-1$}{A,\ki{A}}\\
+			B\to M\acolon \ei{A}{\n{A},\underbrace{\boxed{\n{B},B}}_{\text{id}}}\\
+			M\to A\acolon \ei{A}{\n{A},\boxed{\n{B}, B}}\color{blue}\qquad\longrightarrow\qquad \text{Oracle attack + Type flaw attack!}\\
+			A\to M\acolon A,\boxed{\n{B},B}\color{red}\qquad\longrightarrow\qquad \text{$\n{B},B$ viene mandato in chiaro!}\\
+			M\to B\acolon \ei{B}{\n{B}}
+		\end{align*}
+		L'\textbf{oracle attack} consiste nell'inoltrare il messaggio ad $A$ per farselo decifrare ($A$ è l'unico a poterlo fare!). Il \textbf{type flaw attack} invece, consiste nello sfruttare una vulnerabilità nel protocollo, ovvero che i \ul{messaggi non sono tipati}, dunque il nonce di $B$ e l'identificatore di $B$, che sono una stringa di bit, vengono confusi da $A$ per un identificativo perché $A$ pensa che $\n{B},B$ stia aprendo il protocollo con lui, dicendo \textit{``questo è il mio nonce, voglio parlare con $B$''}. Quindi $A$ invia la richiesta di certificato in chiaro. Ma in realtà $A$ sta inviando informazioni che non dovrebbero essere divulgate ossia il nonce di $B$ e l'identificativo di $B$.
+		
 \end{document}
